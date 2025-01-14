@@ -4,6 +4,8 @@ import json
 import urllib.parse
 import boto3
 
+# S3 trigger for Lambda functions | https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example.html
+
 print('Loading function')
 
 s3 = boto3.client('s3')
