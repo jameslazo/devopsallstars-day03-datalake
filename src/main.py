@@ -7,7 +7,16 @@ import os
 
 load_dotenv()
 
-# Based on https://github.com/alahl1/NBADataLake
+# Based on https://github.com/alahl1/NBADataLake repo by Alicia Ahl
+
+# Set variables loaded from .env
+api_key = os.getenv("SPORTS_DATA_API_KEY")
+nba_endpoint = os.getenv("NBA_ENDPOINT")
+prefix = os.getenv("DEVOPS_PREFIX")
+rawdata_bucket_name = prefix + os.getenv("RAWDATA_BUCKET_NAME")
+
+# Initialize s3 client
+s3 = boto3.client("s3")
 
 def fetch_nba_data():
     """Fetch NBA player data from sportsdata.io."""
@@ -21,44 +30,25 @@ def fetch_nba_data():
         print(f"Error fetching NBA data: {e}")
         return []
 
-
-def convert_to_line_delimited_json(data):
-    """Convert data to line-delimited JSON format."""
-    print("Converting data to line-delimited JSON format...")
-    return "\n".join([json.dumps(record) for record in data])
-
-
 def upload_data_to_s3(data):
     """Upload NBA data to the S3 bucket."""
     try:
-        # Convert data to line-delimited JSON
-        line_delimited_data = convert_to_line_delimited_json(data)
-
         # Define S3 object key
-        file_key = "raw-data/nba_player_data.jsonl"
+        file_key = "raw-data/nba_player_data.json"
 
         # Upload JSON data to S3
-        s3_client.put_object(
-            Bucket=bucket_name,
-            Key=file_key,
-            Body=line_delimited_data
+        s3.put_object(
+            Bucket=rawdata_bucket_name,
+            Key=file_key
         )
         print(f"Uploaded data to S3: {file_key}")
     except Exception as e:
         print(f"Error uploading data to S3: {e}")
 
 
-def main():
+def lambda_handler(event, context):
     print("Setting up data lake for NBA sports analytics...")
-    create_s3_bucket()
-    time.sleep(5)  # Ensure bucket creation propagates
-    create_glue_database()
     nba_data = fetch_nba_data()
     if nba_data:  # Only proceed if data was fetched successfully
         upload_data_to_s3(nba_data)
-    create_glue_table()
-    configure_athena()
     print("Data lake setup complete.")
-
-if __name__ == "__main__":
-    main()
