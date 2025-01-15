@@ -48,4 +48,12 @@ def test_lambda_handler(create_s3_bucket):
     response = lambda_handler({}, {})
     assert response["statusCode"] == 200
 
+    # Initialize s3 client
+    s3 = boto3.client("s3")
+
+    # Verify that the data was uploaded to the bucket
+    bucket_name = os.getenv("DEVOPS_PREFIX") + os.getenv("RAWDATA_BUCKET_NAME")
+    objects = s3.list_objects_v2(Bucket=bucket_name)
+    assert objects["KeyCount"] == 1
+    assert "Contents" in objects
 
