@@ -51,4 +51,4 @@ def lambda_handler(event, context):
     nba_data = fetch_nba_data()
     if nba_data:  # Only proceed if data was fetched successfully
         upload_data_to_s3(nba_data)
-    print("Data lake setup complete.")
+    return {"statusCode": 200, "body": "Data lake setup complete."}
