@@ -12,8 +12,7 @@ load_dotenv()
 # Set variables loaded from .env
 api_key = os.getenv("SPORTS_DATA_API_KEY")
 nba_endpoint = os.getenv("NBA_ENDPOINT")
-prefix = os.getenv("DEVOPS_PREFIX")
-rawdata_bucket_name = prefix + os.getenv("RAWDATA_BUCKET_NAME")
+rawdata_bucket_name = os.getenv("DEVOPS_PREFIX") + os.getenv("RAWDATA_BUCKET_NAME")
 
 # Initialize s3 client
 s3 = boto3.client("s3")
