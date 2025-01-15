@@ -1,6 +1,6 @@
 import boto3
 import json
-import time
+from datetime import datetime as dt
 import requests
 from dotenv import load_dotenv
 import os
@@ -9,10 +9,11 @@ load_dotenv()
 
 # Based on https://github.com/alahl1/NBADataLake repo by Alicia Ahl
 
-# Set variables loaded from .env
+# Set variables
 api_key = os.getenv("SPORTS_DATA_API_KEY")
 nba_endpoint = os.getenv("NBA_ENDPOINT")
 rawdata_bucket_name = os.getenv("DEVOPS_PREFIX") + os.getenv("RAWDATA_BUCKET_NAME")
+today = dt.today().strftime("%Y-%m-%d")
 
 # Initialize s3 client
 s3 = boto3.client("s3")
@@ -33,7 +34,7 @@ def upload_data_to_s3(data):
     """Upload NBA data to the S3 bucket."""
     try:
         # Define S3 object key
-        file_key = "raw-data/nba_player_data.json"
+        file_key = f"{today}/nba_player_data.json"
 
         # Upload JSON data to S3
         s3.put_object(
