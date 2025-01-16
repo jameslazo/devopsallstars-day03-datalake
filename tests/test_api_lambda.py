@@ -36,7 +36,7 @@ def create_s3_bucket(mocked_aws):
 
 def test_lambda_handler(create_s3_bucket):
     """Test Lambda."""
-    from src.main import lambda_handler
+    from src.api_lambda.main import lambda_handler
     # Run the Lambda handler with empty event and context (required arguments)
     response = lambda_handler({}, {})
     assert response["statusCode"] == 200
