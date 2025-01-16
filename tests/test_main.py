@@ -18,13 +18,6 @@ def aws_credentials():
     os.environ["AWS_SESSION_TOKEN"] = "testing"
     os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
 
-"""
-@pytest.fixture(scope="function")
-def set_bucket_env_vars():
-    # Set the required environment variables before testing
-"""
-
-
 @pytest.fixture(scope="function")
 def mocked_aws(aws_credentials):
     """
