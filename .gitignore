@@ -12,7 +12,7 @@
 #########################
 .env
 .venv
-*/__pycache__
-*.bak
+**/__pycache__/
+*.bak*
 *.zip
-assets/*
+assets/

@@ -12,11 +12,9 @@ load_dotenv()
 # Set variables
 api_key = os.getenv("SPORTS_DATA_API_KEY")
 nba_endpoint = os.getenv("NBA_ENDPOINT")
-rawdata_bucket_name = os.getenv("DEVOPS_PREFIX") + os.getenv("RAWDATA_BUCKET_NAME")
+rawdata_bucket_name = os.getenv("DEVOPS_PREFIX") + os.getenv("RAW_BUCKET")
 today = dt.today().strftime("%Y-%m-%d")
 
-# Initialize s3 client
-s3 = boto3.client("s3")
 
 def fetch_nba_data():
     """Fetch NBA player data from sportsdata.io."""
@@ -30,8 +28,12 @@ def fetch_nba_data():
         print(f"Error fetching NBA data: {e}")
         return []
 
+
 def upload_data_to_s3(data):
     """Upload NBA data to the S3 bucket."""
+    # Initialize s3 client
+    s3 = boto3.client("s3")
+
     try:
         # Define S3 object key
         file_key = f"{today}/nba_player_data.json"
@@ -39,7 +41,8 @@ def upload_data_to_s3(data):
         # Upload JSON data to S3
         s3.put_object(
             Bucket=rawdata_bucket_name,
-            Key=file_key
+            Key=file_key,
+            Body=json.dumps(data)
         )
         print(f"Uploaded data to S3: {file_key}")
     except Exception as e:
@@ -51,4 +54,6 @@ def lambda_handler(event, context):
     nba_data = fetch_nba_data()
     if nba_data:  # Only proceed if data was fetched successfully
         upload_data_to_s3(nba_data)
-    return {"statusCode": 200, "body": "Data lake setup complete."}
+        return {"statusCode": 200, "body": "Data lake setup complete."}
+    else:
+        return {"statusCode": 500, "body": "Error setting up data lake."}
