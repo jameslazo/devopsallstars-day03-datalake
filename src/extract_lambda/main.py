@@ -9,7 +9,7 @@ import os
 
 load_dotenv()
 
-transform_bucket_name = os.getenv("DEVOPS_PREFIX") + os.getenv("TRANSFORMED_BUCKET")
+extract_bucket_name = os.getenv("DEVOPS_PREFIX") + os.getenv("EXTRACTED_BUCKET")
 
 # S3 trigger for Lambda functions | https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example.html
 
@@ -39,7 +39,7 @@ def lambda_handler(event, context):
 
         # Upload JSON data to S3
         s3.put_object(
-            Bucket=transform_bucket_name,
+            Bucket=extract_bucket_name,
             Key=file_key,
             Body=line_delimited_data
         )
