@@ -28,8 +28,9 @@ jobs:
         run: pytest --junitxml=pytest-report.xml
       - name: Pack Lambda
         run: |
-          mkdir -p api_lambda, extract_lambda
+          mkdir -p api_lambda
           cp -r src/api_lambda/main.py api_lambda/
+          mkdir -p extract_lambda
           cp -r src/extract_lambda/main.py extract_lambda/
           # Install dependencies into the package folder
           pip install -r requirements.txt -t api_lambda/
