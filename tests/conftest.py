@@ -8,9 +8,7 @@ from datetime import datetime as dt
 
 today = dt.today().strftime("%Y-%m-%d")
 
-dotenv_path=os.path.join(os.path.dirname(__file__), "../src", ".env")
-if not load_dotenv(dotenv_path):
-    raise FileNotFoundError(f"Could not find .env file at {dotenv_path}")
+load_dotenv()
 
 
 @pytest.fixture(scope="session")
