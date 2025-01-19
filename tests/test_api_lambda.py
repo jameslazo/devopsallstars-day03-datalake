@@ -12,7 +12,7 @@ def test_lambda_handler_s3_upload(create_raw_s3_bucket):
     data = fetch_nba_data()
 
     # Upload data to mocked S3
-    s3_raw, bucket_name = create_raw_s3_bucket
+    s3_raw, bucket_name, today = create_raw_s3_bucket
     upload_data_to_s3(data)
     
     # Run the Lambda handler with empty event and context (required arguments)
@@ -24,7 +24,6 @@ def test_lambda_handler_s3_upload(create_raw_s3_bucket):
     # assert False, objects # Uncomment to inspect objects
     assert objects["KeyCount"] == 1
     assert "Contents" in objects
-    today = "2025-01-18"
     json_data = s3_raw.get_object(Bucket=bucket_name, Key=f"{today}/nba_player_data.json")["Body"].read().decode("utf-8")
     parsed_json = json.loads(json_data)
     assert "BirthCity" in parsed_json[0], parsed_json

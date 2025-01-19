@@ -36,7 +36,7 @@ def create_raw_s3_bucket(mocked_aws):
     bucket_name_raw = os.getenv("DEVOPS_PREFIX") + os.getenv("RAW_BUCKET")
     s3_raw = boto3.client("s3", region_name="us-east-1")
     s3_raw.create_bucket(Bucket=bucket_name_raw)
-    yield s3_raw, bucket_name_raw
+    yield s3_raw, bucket_name_raw, today
 
 
 @pytest.fixture(scope="session")
@@ -44,7 +44,7 @@ def create_extract_s3_bucket(mocked_aws):
     s3_extract = boto3.client("s3", region_name="us-east-1")
     bucket_name_extract = os.getenv("DEVOPS_PREFIX") + os.getenv("EXTRACTED_BUCKET")
     s3_extract.create_bucket(Bucket=bucket_name_extract)
-    yield s3_extract, bucket_name_extract
+    yield s3_extract, bucket_name_extract, today
 
 
 @pytest.fixture
