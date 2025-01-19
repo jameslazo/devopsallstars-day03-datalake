@@ -26,3 +26,28 @@ jobs:
           pip install pytest
       - name: Run tests with pytest\
         run: pytest --junitxml=pytest-report.xml
+      - name: Pack Lambda
+        run: |
+          mkdir -p api_lambda, extract_lambda
+          cp -r src/api_lambda/main.py api_lambda/
+          cp -r src/extract_lambda/main.py extract_lambda/
+          # Install dependencies into the package folder
+          pip install -r requirements.txt -t api_lambda/
+          pip install -r requirements.txt -t extract_lambda/
+          # Zip the Lambda function
+          cd api_lambda
+          zip -r ../api_lambda.zip .
+          cd ../extract_lambda
+          zip -r ../extract_lambda.zip .
+      - name: Configure AWS credentials from repo
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN }}  
+          aws-region: us-east-1
+          role-session-name: GitHubActionSession
+      - name: Deploy Lambda Function to AWS
+        run: |
+          API_LAMBDA="devops_day03_api_lambda"
+          EXTRACT_LAMBDA="devops_day03_extract_lambda"
+          aws lambda update-function-code --function-name $API_LAMBDA --zip-file fileb://api_lambda.zip
+          aws lambda update-function-code --function-name $EXTRACT_LAMBDA --zip-file fileb://extract_lambda.zip
