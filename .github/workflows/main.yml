@@ -8,7 +8,7 @@ jobs:
     env: 
       NBA_ENDPOINT: ${{ vars.NBA_ENDPOINT }}
       DEVOPS_PREFIX: ${{ vars.DEVOPS_PREFIX }}
-      SPORTS_DATA_API_KEY: ${{ secrets.API_KEY }}
+      SPORTS_DATA_API_KEY: ${{ secrets.SPORTS_DATA_API_KEY }}
       RAW_BUCKET: ${{ secrets.RAW_BUCKET }}
       EXTRACTED_BUCKET: ${{ secrets.EXTRACTED_BUCKET }}
     steps:
